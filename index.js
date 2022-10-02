@@ -1,10 +1,13 @@
 const telegramBot = require("node-telegram-bot-api");
 const dotenv = require("dotenv");
 const math = require("mathjs");
+const express = require("express");
+const app = express();
 
 dotenv.config();
 
 const token = process.env.BOT_TOKEN;
+const PORT = process.env.PORT;
 
 const bot = new telegramBot(token, { polling: true });
 
@@ -12,7 +15,16 @@ let sum = false;
 
 let chatId;
 
-bot.on("message", (msg) => {
+// MIDDLEWAES
+
+app.use(express.json());
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
+
+bot.on("text", (msg) => {
   chatId = msg.chat.id;
 
   let randomWelcomeMessages = [
@@ -78,3 +90,5 @@ bot.on("message", (msg) => {
 //     bot.sendMessage(chatId, "Anlamadım.");
 //   }
 // });
+
+app.listen(PORT, () => console.log("Telegram bot is running..."));
